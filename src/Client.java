@@ -1,48 +1,73 @@
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 public class Client {
 
     public static void main(String[] args) {
 
+
         final String inputFileName;
         final String inputSearchedString;
         final String pattern = "^[\\s]*([a-zA-Z]+[\\s]+){1,2}[a-zA-Z]+[\\s]*$ ";
         int outputLineCount = 0;
-        Scanner scanner;
-
 
         try {
-            if (args.length == 2) {
-                inputFileName = args[0];
-                inputSearchedString = args[1];
-            } else {
-                throw new Exception("Brak parametrów wejściowych! Koniec");
-            }
+            inputFileName = args[0];
+            inputSearchedString = args[1];
 
-            scanner = new Scanner(new File(inputFileName));
-
-            String currentLine;
-            int currentLineCount = 0;
-
-            int minLeveshteinValue = Integer.MAX_VALUE;
-
-            while (scanner.hasNextLine()) {
-                currentLineCount++;
-                currentLine = scanner.nextLine();
-
-                int currentLevenstheinValue = Levenshtein.distance(inputSearchedString, currentLine);
-                if (currentLevenstheinValue < minLeveshteinValue) {
-                    minLeveshteinValue = currentLevenstheinValue;
-                    outputLineCount = currentLineCount;
-                }
-            }
+            outputLineCount = getAnswer(new File(inputFileName), inputSearchedString);
 
         } catch (Exception exc) {
-            outputLineCount = 3;
+            outputLineCount = 5;
         } finally {
             System.out.println("Linia : " + outputLineCount);
         }
-
     }
+
+    private static int getAnswer(File inputFile, String inputSearchedString) throws FileNotFoundException {
+        Scanner scanner = new Scanner(inputFile);
+
+        String currentLine;
+        int currentLineCount = 0;
+        int outputLineCount = 0;
+
+        int minLeveshteinValue = Integer.MAX_VALUE;
+
+        while (scanner.hasNextLine()) {
+            currentLineCount++;
+            currentLine = scanner.nextLine();
+
+            int currentLevenstheinValue = getDistanceSum(inputSearchedString.split("\\s"),
+                    currentLine.split("\\s"));
+            if (currentLevenstheinValue < minLeveshteinValue) {
+                minLeveshteinValue = currentLevenstheinValue;
+                outputLineCount = currentLineCount;
+            }
+        }
+
+        return outputLineCount;
+    }
+
+    private static int getDistanceSum(String[] leftArray, String[] rightArray) {
+
+        int outputDistance = 0;
+
+        for (String aLeftArray : leftArray) {
+
+            int currentWordMin = Integer.MAX_VALUE;
+
+            for (String aRightArray : rightArray) {
+
+                int currentWordDistance = Levenshtein.distance(aLeftArray, aRightArray);
+                if (currentWordDistance < currentWordMin) {
+                    currentWordMin = currentWordDistance;
+                }
+            }
+            outputDistance += currentWordMin;
+        }
+
+        return outputDistance;
+    }
+
 }
