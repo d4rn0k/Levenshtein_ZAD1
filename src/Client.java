@@ -52,18 +52,18 @@ public class Client {
 
         int outputDistance = 0;
 
-        for (String aLeftArray : leftArray) {
+        for (String leftWord : leftArray) {
 
-            int currentWordMin = Integer.MAX_VALUE;
+            int rightWord = Integer.MAX_VALUE;
 
             for (String aRightArray : rightArray) {
 
-                int currentWordDistance = Levenshtein.distance(aLeftArray, aRightArray);
-                if (currentWordDistance < currentWordMin) {
-                    currentWordMin = currentWordDistance;
+                int currentWordDistance = Levenshtein.distance(leftWord, aRightArray);
+                if (currentWordDistance < rightWord) {
+                    rightWord = currentWordDistance;
                 }
             }
-            outputDistance += currentWordMin;
+            outputDistance += rightWord;
         }
 
         return outputDistance;
