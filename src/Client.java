@@ -6,10 +6,9 @@ public class Client {
 
     public static void main(String[] args) {
 
-
         final String inputFileName;
         final String inputSearchedString;
-        final String pattern = "^[\\s]*([a-zA-Z]+[\\s]+){1,2}[a-zA-Z]+[\\s]*$ ";
+
         int outputLineCount = 0;
 
         try {
